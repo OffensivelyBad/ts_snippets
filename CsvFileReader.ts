@@ -2,10 +2,12 @@ import fc from 'fs';
 
 // From typescript-the-complete-developers-guide
 
-export class CsvFileReader {
-  data: string[][] = [];
+export abstract class CsvFileReader<T> {
+  data: T[] = [];
 
   constructor(public filename: string) { }
+
+  abstract mapRow(row: string[]): T;
 
   read(): void {
     this.data = fc
@@ -17,6 +19,7 @@ export class CsvFileReader {
         (row: string): string[] => {
           return row.split(',');
         }
-      );
+      )
+      .map(this.mapRow);
   }
 }
